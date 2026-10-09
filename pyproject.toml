@@ -17,6 +17,7 @@ dependencies = [
     "sqlalchemy>=2.0.25",
     "asyncpg>=0.29.0",
     "fhir.resources>=8.2.0",
+    "python-dateutil>=2.8.2",
 ]
 
 [project.optional-dependencies]
