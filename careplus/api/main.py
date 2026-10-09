@@ -135,6 +135,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
         "https://careplus-fawn.vercel.app",
+        "https://careplus-production-56f1.up.railway.app",
     ],
     allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
