@@ -25,4 +25,4 @@ RUN mkdir -p /app-parent && ln -s /app /app-parent/careplus
 ENV PYTHONPATH=/app-parent
 
 # Run the application
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "careplus.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
