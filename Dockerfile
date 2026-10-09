@@ -8,21 +8,21 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy all files from repo root
-COPY . .
+# Copy pyproject.toml first for better caching
+COPY pyproject.toml ./
+
+# Copy the careplus package
+COPY careplus ./careplus
 
 # Install Python dependencies
-RUN pip install --no-cache-dir fastapi uvicorn[standard] supabase pydantic pydantic-settings structlog python-jose[cryptography] passlib[bcrypt] python-multipart httpx sqlalchemy asyncpg fhir.resources
+RUN pip install --no-cache-dir -e .
 
 # Expose port
 EXPOSE 8000
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-
-# Create a parent directory structure and symlink to satisfy 'careplus' imports
-RUN mkdir -p /app-parent && ln -s /app /app-parent/careplus
-ENV PYTHONPATH=/app-parent
+ENV PYTHONPATH=/app
 
 # Run the application
-CMD ["uvicorn", "careplus.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uvicorn careplus.api.main:app --host 0.0.0.0 --port ${PORT:-8000}
