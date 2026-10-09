@@ -122,10 +122,8 @@ Synthetic data only. Not for production clinical use without regulatory review.
     version="1.0.0"
 )
 
-app.include_router(patient_mobile_router)
-app.include_router(web_flow_router)
-
 # CORS — allow the web frontend (Vite dev servers + preview) to call the API.
+# IMPORTANT: This must be added BEFORE including routers for CORS to work properly
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for production
@@ -133,6 +131,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(patient_mobile_router)
+app.include_router(web_flow_router)
 
 
 @app.middleware("http")
@@ -146,6 +147,7 @@ async def request_id_middleware(request: Request, call_next):
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
+    # Bypass auth for health, docs, and OPTIONS (CORS preflight)
     if request.url.path in ["/health", "/docs", "/openapi.json", "/eval/metrics", "/eval/metrics/history"] or request.method == "OPTIONS":
         return await call_next(request)
 
